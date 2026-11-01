@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Network Node Inspector v4.5.2</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h2>[Network Node Inspector v4.5.2]</h2>
+    <div class="header-badges" role="status" aria-live="polite">
+      <span id="vpn-indicator" class="status-badge">ROLE: STANDBY</span>
+      <span id="backend-indicator" class="status-badge">API: CHECKING...</span>
+      <span id="status-indicator" class="status-badge">READY</span>
+    </div>
+  </header>
+
+  <div class="card search-card">
+    <div class="search-bar">
+      <input 
+        type="text" 
+        id="ip-input" 
+        aria-label="Enter IPv4, IPv6, or Domain to inspect"
+        autocomplete="off"
+        spellcheck="false"
+        placeholder="Enter IPv4, IPv6, or Domain (e.g., 1.1.1.1, 185.220.101.1, 45.33.32.156)..."
+      >
+      <button type="button" id="btn-scan">Scan Target</button>
+      <button type="button" id="btn-my-ip" class="secondary">My IP</button>
+    </div>
+
+    <div class="quick-chips-row">
+      <span class="helper-label">Quick Test:</span>
+      <button type="button" class="quick-chip" data-target="1.1.1.1">1.1.1.1 (Clean)</button>
+      <button type="button" class="quick-chip" data-target="185.220.101.1">185.220.101.1 (Tor)</button>
+      <button type="button" class="quick-chip" data-target="45.33.32.156">45.33.32.156 (Nmap)</button>
+      <button type="button" class="quick-chip" data-target="192.168.1.1">192.168.1.1 (LAN)</button>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+    <div class="card">
+      <div class="card-header-row">
+        <h3>// Node Telemetry & Threat Intel</h3>
+        <span id="hostname-badge" class="sub-badge">HOST: PENDING</span>
+      </div>
+      <div id="intel-container" class="intel-grid" aria-live="polite">
+        <!-- Populated dynamically via script.js -->
+      </div>
+    </div>
+
+    <div class="card" id="map-card">
+      <div class="card-header-row">
+        <h3>// Estimated Geolocation</h3>
+      </div>
+      <div class="map-container" id="map-wrapper">
+        <iframe 
+          id="google-map" 
+          title="Estimated IP Geolocation Map"
+          src="https://www.google.com/maps?q=0,0&z=2&output=embed" 
+          loading="lazy">
+        </iframe>
+      </div>
+      <p class="helper-text" id="coord-display">Coordinates: Waiting for scan...</p>
+    </div>
+  </div>
+
+  <div class="help-widget">
+    <button type="button" id="help-fab" class="help-fab" aria-expanded="false" aria-controls="help-popover">
+      <span class="help-fab-icon">[?]</span>
+      <span class="help-fab-label">How This Works</span>
+    </button>
+
+    <div id="help-popover" class="help-popover" role="dialog" aria-label="Interactive Telemetry Guide" aria-hidden="true">
+      <div class="help-popover-header">
+        <span class="help-popover-title">// INTERACTIVE GUIDE</span>
+        <div class="help-header-actions">
+          <button type="button" class="help-rescan-trigger help-rescan-mini" title="Re-Scan My Connection">↻ Test My IP</button>
+          <button type="button" class="help-close-trigger help-close-btn" aria-label="Close Guide" title="Close Guide">✕</button>
+        </div>
+      </div>
+
+      <div id="help-live-summary" class="help-live-summary">
+        Scanning your connection telemetry...
+      </div>
+
+      <div class="help-steps-list">
+        <div class="help-step-card active" data-topic="ip" role="button" tabindex="0">
+          <div class="help-step-title">
+            <span>1. 🌐 Your Public IP & ISP</span>
+            <span class="step-badge">HIGHLIGHTING</span>
+          </div>
+          <p>Your internet provider (ISP) assigns your router a <strong>Public IP Address</strong>. Every website or app you connect to sees this address and uses it to identify your <strong>Country, City, and Wi-Fi provider</strong>.</p>
+        </div>
+
+        <div class="help-step-card" data-topic="vpn" role="button" tabindex="0">
+          <div class="help-step-title">
+            <span>2. 🛡️ VPN & Proxy Detection</span>
+            <span class="step-badge">TAP TO VIEW</span>
+          </div>
+          <p>Look at the highlighted role boxes: if they display <code>VPN DETECTED</code>, <code>PROXY</code>, or <code>DATACENTER</code>, websites can tell you are using a VPN! If it shows <code>RESIDENTIAL [CLEAN]</code>, you appear as a normal home user.</p>
+        </div>
+
+        <div class="help-step-card" data-topic="threat" role="button" tabindex="0">
+          <div class="help-step-title">
+            <span>3. 🚨 Threat & Hacker Reputation</span>
+            <span class="step-badge">TAP TO VIEW</span>
+          </div>
+          <p>Public IPs are often shared across thousands of users. We check live security databases (<strong>AbuseIPDB & Shodan</strong>) to see if your IP was reported for spam, botnets, or hacking—or if it is <strong>0% Clean</strong>.</p>
+        </div>
+
+        <div class="help-step-card" data-topic="map" role="button" tabindex="0">
+          <div class="help-step-title">
+            <span>4. 📍 Why the Map is Only an Estimate</span>
+            <span class="step-badge">TAP TO VIEW</span>
+          </div>
+          <p><strong>A Public IP alone cannot pinpoint your exact house or street!</strong> Without GPS permission, an IP lookup only shows the <strong>estimated city</strong> or central routing building of your internet provider (ISP).</p>
+        </div>
+      </div>
+
+      <div class="help-mobile-nav">
+        <button type="button" id="btn-prev-guide" class="secondary help-step-btn">◀ Prev</button>
+        <span id="help-step-counter" class="help-step-counter">1 / 4</span>
+        <button type="button" id="btn-next-guide" class="help-step-btn">Next ▶</button>
+      </div>
+
+      <div class="help-popover-footer">
+        <button type="button" class="help-rescan-trigger secondary help-action-btn">
+          ↻ Re-Scan My Connection (Test VPN)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
