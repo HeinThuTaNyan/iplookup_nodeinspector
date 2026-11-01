@@ -11,6 +11,24 @@ You can access live demo(currently deployed in vercel) <a href="https://nodeinsp
 
 This is my **very first full-stack web project**. It originally started as a simple practice exercise to learn how to fetch and parse external APIs using JavaScript and Python. I utilized GEMINI Argon to help me with this web. As I dug deeper and as a cyber security student myself, I expand it into network telemetry and cybersecurity data. The scope expanded organically. What began as a basic IP lookup script evolved into a comprehensive, responsive OSINT dashboard with security hardening, concurrent backend processing, and an interactive UI.
 
+## 🖥️ UI Showcase
+
+### Desktop Terminal Interface
+<p align="center">
+  <img src="Images/desktop_image.png" alt="Desktop View 1" width="100%" height="320" />
+</p>
+<p align="center">
+  <img src="Images/desktop_image2.png" alt="Desktop View 2" width="100%" height="320" />
+</p>
+
+### Mobile Interface
+<p align="center">
+  <img src="Images/mobile.png" alt="Mobile View 1" height="480" />
+  &nbsp; &nbsp; &nbsp; &nbsp;
+  <img src="Images/mobile2.png" alt="Mobile View 2" height="480" />
+</p>
+
+---
 ### 🚧 Challenges Tackled
 * **CORS and API Rate Limits:** Early on, client-side fetches to certain APIs were blocked by CORS, or I quickly hit rate limits. **Solution:** I built a Flask Python backend to act as a proxy, hiding my API keys and aggregating requests securely.
 * **Performance Bottlenecks:** Fetching 5 different threat intel APIs sequentially took 6-8 seconds. **Solution:** Implemented Python's `ThreadPoolExecutor` to run API calls concurrently, reducing wait times to under 2.5 seconds.
